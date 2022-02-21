@@ -1,0 +1,28 @@
+---
+openapi: 3.0.3
+info:
+  title: crud-demo API
+  version: 1.0.0-SNAPSHOT
+paths:
+  /register:
+    post:
+      tags:
+      - Register Customer
+      summary: Microservice used to save customer info.
+      description: Microservice used to save customer info.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              data: data
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              example:
+                data:
+                  message: Hello!
+                response: OK
