@@ -1,0 +1,96 @@
+package mx.exam.main;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        int numCotizaciones = 0;
+        System.out.println("*********** Cuantas cotizaciones deseas realizar? ***************");
+        Scanner scan = new Scanner(System.in);
+        numCotizaciones = scan.nextInt();
+
+        for (int i = 1; i <= numCotizaciones; i++){
+            int ancho = 0;
+            int largo = 0;
+            System.out.println(String.format("---------------------- Cotización No. %d ------------------------ ", i));
+            System.out.println("Ancho del piso en cm ");
+            ancho = scan.nextInt();
+            System.out.println("Largo del piso en cm ");
+            largo = scan.nextInt();
+            int mcm = calcularMCD2(ancho,largo);
+            System.out.println(String.format("El tamaño de las losetas es de %d * %d cm", mcm, mcm));
+        }
+
+    }
+
+    public static int calcularMCD(int n, int m) { //Algoritmo de euclides
+        while (m != 0) {
+            int temp = m;
+            m = n % m;
+            n = temp;
+        }
+        return n;
+    }
+
+    public static int calcularMCD2(int n, int m) { // Algoritmo de descomposicion primaria
+        List<Integer> primosN = new ArrayList<>();
+        List<Integer> primosM = new ArrayList<>();
+        boolean flagResetsearch = false;
+
+        //Paso 1 Hacemos descomposicion de numeros primos y los guardamos
+        while (n != 1 || m != 1) {
+            z:
+            for (int x = 1; x <= 100; x++) { //for para buscar los primos
+                if (esPrimo(x)) {
+                    if (n != 1 && (n % x) == 0) {
+                        primosN.add(x);
+                        n = n/x;
+                        flagResetsearch = true;
+                    }
+
+                    if (m != 1 && (m % x) == 0) {
+                        primosM.add(x);
+                        m = m/x;
+                        flagResetsearch = true;
+                    }
+                }
+                if(flagResetsearch) {
+                    flagResetsearch = false;
+                    break z;
+                }
+            }
+        }
+
+        //Paso 2, se obtienen los primos compartidos y los guardamos en otra lista
+        List<Integer> aux = new ArrayList<>();
+        for (int i = 0; i < primosN.size(); i++) {
+            if (primosM.contains(primosN.get(i)) && !aux.contains(primosN.get(i))) {
+                aux.add(primosN.get(i));
+            }
+        }
+
+        //Paso 3, Multiplicamos los factores que coinciden
+        int resultado = 1; //Regresa uno si no comparten primos
+        for (int j = 0; j < aux.size(); j++) {
+            resultado = resultado * aux.get(j);
+        }
+
+        return resultado;
+    }
+
+    public static boolean esPrimo(int numero) {
+        // El 0, 1 y 4 no son primos
+        if (numero == 0 || numero == 1 || numero == 4) {
+            return false;
+        }
+        for (int x = 2; x < numero / 2; x++) {
+            // Si es divisible por cualquiera de estos números, no es primo
+            if (numero % x == 0)
+                return false;
+        }
+        // Si no se pudo dividir por ninguno de los de arriba, sí es primo
+        return true;
+    }
+}
